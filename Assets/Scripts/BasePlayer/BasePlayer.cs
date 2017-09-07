@@ -11,7 +11,7 @@ public class BasePlayer  {
     public static int agility;
     public static int strength;
                                             //MAIN STATS
-    private int endurance;
+    private int health;
     private int stamina;
 
                                             //MAIN INFO
@@ -30,7 +30,6 @@ public class BasePlayer  {
         set { PlayerClass = value; }
     }
 
-
                                              //MAIN STATS
 
     public int Stamina
@@ -38,10 +37,10 @@ public class BasePlayer  {
         get { return stamina; }
         set { stamina = value; }
     }
-    public int Endurance
+    public int Health
     {
-        get { return endurance; }
-        set { endurance = value; }
+        get { return health; }
+        set { health = value; }
     }
 
                                             //HERO STATS

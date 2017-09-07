@@ -86,7 +86,7 @@ public class HeroGUI : MonoBehaviour
 
         //HERO ATTRIBUTE
         newPlayer.Stamina = newPlayer.playerClass.stamina;
-        newPlayer.Endurance = newPlayer.playerClass.endurance;
+        newPlayer.Health = newPlayer.playerClass.endurance;
 
         //MAIN HERO ATTRIBUTE
 
@@ -108,7 +108,7 @@ public class HeroGUI : MonoBehaviour
 
         //ATTRIBUTES
         Debug.Log("Player Stamina: " + newPlayer.Stamina);
-        Debug.Log("Player Endurance: " + newPlayer.Endurance);
+        Debug.Log("Player Endurance: " + newPlayer.Health);
 
 
 

@@ -5,20 +5,20 @@ using UnityEngine;
 public class Moving : MonoBehaviour
 {
     public static bool evol = false;
-    private string Class_input = HeroGUI.CharClass;
-    public Sprite Mage_class;
-    public Sprite Warrior_class;
-    public Sprite Rogue_class;
+    private Sprite Mage_class;
+    private Sprite Warrior_class;
+    private Sprite Rogue_class;
     SpriteRenderer sprite;
     [SerializeField]
-    public static float speed = 3.0F;
+    private float speed = 3.0F;
+    public static float currentHealth = BaseCharacterClass.MaxHealth;
     public float JumpForce = 6.0F;
     private bool isGrounded = false;
     [SerializeField]
-    private float waiting = 1.0F;
     public static int Xp = 0;
     public static int MaxXp = 100 * BaseCharacterClass.Level;
     public static float score = 0;
+    public int dmg;
 
     private void Awake()
         {
@@ -82,7 +82,7 @@ public class Moving : MonoBehaviour
             BaseCharacterClass.Agility += 1;
             BaseCharacterClass.Strength += 1;
             BaseCharacterClass.Stamina += 2;
-            BaseCharacterClass.Endurance += 1;
+            BaseCharacterClass.MaxHealth += 1;
         }
         if (CharacterClass == "Warrior")
         {
@@ -90,7 +90,7 @@ public class Moving : MonoBehaviour
             BaseCharacterClass.Agility += 1;
             BaseCharacterClass.Strength += 2;
             BaseCharacterClass.Stamina += 1;
-            BaseCharacterClass.Endurance += 3;
+            BaseCharacterClass.MaxHealth += 3;
         }
         if (CharacterClass == "Rogue")
         {
@@ -98,7 +98,7 @@ public class Moving : MonoBehaviour
             BaseCharacterClass.Agility += 2;
             BaseCharacterClass.Strength += 1;
             BaseCharacterClass.Stamina += 3;
-            BaseCharacterClass.Endurance += 1;
+            BaseCharacterClass.MaxHealth += 1;
         }
     }
 

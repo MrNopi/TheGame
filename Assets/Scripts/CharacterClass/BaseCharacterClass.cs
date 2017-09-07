@@ -8,7 +8,7 @@ public class BaseCharacterClass {
     private string characterClassDescription;
                 //Stats
     public static int Stamina;
-    public static int Endurance;
+    public static int MaxHealth;
     public static int Strength;
     public static int Intellect;
     public static int Agility;
@@ -28,8 +28,8 @@ public class BaseCharacterClass {
     
     public int endurance
     {
-        get { return Endurance; }
-        set { Endurance = value; }
+        get { return MaxHealth; }
+        set { MaxHealth = value; }
     }
     public int strength
     {
