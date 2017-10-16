@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shoot : Bullet {
-    // Use this for initialization
+public class Inventory : MonoBehaviour {
 
+    private GameObject[] inventory;
 }

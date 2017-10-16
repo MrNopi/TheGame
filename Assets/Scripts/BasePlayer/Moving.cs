@@ -4,37 +4,40 @@ using UnityEngine;
 
 public class Moving : MonoBehaviour
 {
-    public static bool evol = false;
-    private Sprite Mage_class;
-    private Sprite Warrior_class;
-    private Sprite Rogue_class;
+    private Bullet bullet;
+    private Animator anim;
     SpriteRenderer sprite;
     [SerializeField]
-    private float speed = 3.0F;
-    public static float currentHealth = BaseCharacterClass.MaxHealth;
-    public float JumpForce = 6.0F;
-    private bool isGrounded = false;
+    private float speed;
     [SerializeField]
-    public static int Xp = 0;
-    public static int MaxXp = 100 * BaseCharacterClass.Level;
+    private float JumpForce;
+    private bool isGrounded = true;
+    [SerializeField]
+    int health = 120;
     public static float score = 0;
-    public int dmg;
+    public static int dmg;
+    public static int Xp = 0;
+    private int MaxXp = 100 * BaseCharacterClass.Level;
+    public static float currentHealth = BaseCharacterClass.MaxHealth;
 
+    private enum animations
+        {
+            Idle,
+            Run,
+            Jump
+        }
+    private animations State
+    {
+        get { return (animations)anim.GetInteger("State"); }
+        set { anim.SetInteger("State", (int) value); }
+
+    }
     private void Awake()
-        {
-            Rigidbody2D rb = GetComponent<Rigidbody2D>();
-            sprite = GetComponentInChildren<SpriteRenderer>();
-
-            if (HeroGUI.CharClass == "Mage")
-        {
-            sprite.sprite = Mage_class;
-        }
-            else if (HeroGUI.CharClass == "Warrior")
-        {
-            this.GetComponent<SpriteRenderer>().sprite = Warrior_class;
-        }
-            else if (HeroGUI.CharClass == "Rogue")
-            this.GetComponent<SpriteRenderer>().sprite = Rogue_class;
+    {
+        bullet = Resources.Load<Bullet>("Bullet");
+        anim = GetComponent<Animator>();
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        sprite = GetComponentInChildren<SpriteRenderer>();
     }
 
     private void FixedUpdate()
@@ -43,64 +46,52 @@ public class Moving : MonoBehaviour
     }
 
     private void Update()
-        {
-            if (Input.GetButton("Horizontal"))Run();
-        if (isGrounded && Input.GetButtonDown("Jump")) Jump();
-
-        if (Xp > MaxXp - 1)
-        {
-            LevelUp(HeroGUI.CharClass);
-        }
-        if (Input.GetMouseButton(0))
-        {
-            evol = true;
-        }
-    }
-
-        private void Run()
     {
+        if (Input.GetMouseButtonDown(0))
+            Shoot();
+        if (isGrounded)
+        if (Input.GetButton("Horizontal") && Input.GetKey(KeyCode.LeftShift))
+            Run();
+        if (Input.GetButton("Horizontal"))
+            Walk();
+        if (isGrounded && Input.GetButtonDown("Jump"))
+            Jump();
+        State = animations.Idle;
+    }
+    private void Run()
+    {
+        State = animations.Run;
+        Vector3 direction = transform.right * Input.GetAxis("Horizontal");
+        speed /= 2;
+        transform.position = Vector3.MoveTowards(transform.position, transform.position + direction, (speed * Time.deltaTime));
+        sprite.flipX = direction.x < 0.0F;
+    }
+    private void Walk()
+    {
+        speed = 5f;
         Vector3 direction = transform.right * Input.GetAxis("Horizontal");
         transform.position = Vector3.MoveTowards(transform.position, transform.position + direction, speed * Time.deltaTime);
         sprite.flipX = direction.x < 0.0F;
+        anim.SetFloat("Speed", speed);
+        State = animations.Run;
     }
     private void Jump()
     {
         GetComponent<Rigidbody2D>().AddForce(transform.up * JumpForce, ForceMode2D.Impulse);
-
+        State = animations.Jump;
     }
-
     private void CheckGround()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position , 0.3F);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(this.transform.position , 0.5F);
         isGrounded = colliders.Length > 1;
     }
-
-    private void LevelUp(string CharacterClass) {
-        if (CharacterClass == "Mage")
-        {
-            BaseCharacterClass.Intellect += 2;
-            BaseCharacterClass.Agility += 1;
-            BaseCharacterClass.Strength += 1;
-            BaseCharacterClass.Stamina += 2;
-            BaseCharacterClass.MaxHealth += 1;
-        }
-        if (CharacterClass == "Warrior")
-        {
-            BaseCharacterClass.Intellect += 1;
-            BaseCharacterClass.Agility += 1;
-            BaseCharacterClass.Strength += 2;
-            BaseCharacterClass.Stamina += 1;
-            BaseCharacterClass.MaxHealth += 3;
-        }
-        if (CharacterClass == "Rogue")
-        {
-            BaseCharacterClass.Intellect += 1;
-            BaseCharacterClass.Agility += 2;
-            BaseCharacterClass.Strength += 1;
-            BaseCharacterClass.Stamina += 3;
-            BaseCharacterClass.MaxHealth += 1;
-        }
+    private void Shoot()
+    {
+        Vector3 pos = transform.position; pos.y += 0.8f;
+       Bullet newBullet = Instantiate(bullet, pos, bullet.transform.rotation) as Bullet;
+        newBullet.Direction = newBullet.transform.right * (sprite.flipX ? -1.0f : 1.0f);
     }
+  
 
 }
 

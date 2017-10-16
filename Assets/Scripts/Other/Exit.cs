@@ -6,8 +6,9 @@ using UnityEngine.UI;
 public class Exit : MonoBehaviour {
     [SerializeField]
     private int Level_number;
+    bool entered = false;
     [SerializeField]
-    private float exit_pos_y = 2.6f;
+    private float exit_pos_y;
     private Image img;
     private Text text;
     Vector3 exit_position;
@@ -22,13 +23,16 @@ public class Exit : MonoBehaviour {
         img.enabled = false;
                                         // Text for interacting
         text = img.GetComponentInChildren<Text>();
-       
         text.enabled = false;
+        text_position = new Vector3(transform.position.x + exit_pos_x, transform.position.y + 3.7f, transform.position.z);
+        text.transform.position = text_position;
     }
     private void Update()
     {
-        text_position = new Vector3(transform.position.x + exit_pos_x, transform.position.y + 3.7f, transform.position.z);
-        text.transform.position = text_position;
+       if (entered)
+        {
+            Application.LoadLevel(Application.loadedLevel + 1);
+        }
     }
     private void exit(int Level_number)
     {
@@ -45,7 +49,7 @@ public class Exit : MonoBehaviour {
                                        // Exit by interacting
         if (collision.gameObject.tag == "Player" && Input.GetKeyDown(KeyCode.E))
         {
-            exit(Level_number);
+            entered = true;
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
